@@ -1,0 +1,16 @@
+{
+  "name": "browser-comp",
+  "version": "1.0.0",
+  "description": "Browser compatibility screenshot comparison tool",
+  "type": "module",
+  "main": "capture.mjs",
+  "bin": {
+    "browser-comp": "./capture.mjs"
+  },
+  "scripts": {
+    "capture": "node capture.mjs"
+  },
+  "dependencies": {
+    "playwright": "^1.50.0"
+  }
+}

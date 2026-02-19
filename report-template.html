@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Browser Compatibility Report</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg-primary: #06080c;
+    --bg-card: #0d1117;
+    --bg-card-hover: #131920;
+    --bg-surface: #161b22;
+    --border: #21262d;
+    --border-highlight: #388bfd;
+    --text-primary: #e6edf3;
+    --text-secondary: #8b949e;
+    --text-muted: #484f58;
+    --accent-chromium: #4caf50;
+    --accent-webkit: #5c8aff;
+    --accent-firefox: #ff9800;
+    --accent-inapp: #e91e63;
+    --radius: 10px;
+    --font-mono: 'JetBrains Mono', monospace;
+    --font-sans: 'DM Sans', -apple-system, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* ====== HEADER ====== */
+  .header {
+    padding: 2.5rem 3rem 2rem;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, #0d1117 0%, var(--bg-primary) 100%);
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .header-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--accent-webkit), var(--accent-chromium));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .header-meta {
+    display: flex;
+    gap: 2rem;
+    margin-top: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .header-meta-item {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .header-meta-item code {
+    font-family: var(--font-mono);
+    background: var(--bg-surface);
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    color: var(--accent-webkit);
+    border: 1px solid var(--border);
+  }
+
+  /* ====== TOOLBAR ====== */
+  .toolbar {
+    padding: 1rem 3rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    align-items: center;
+    background: var(--bg-card);
+  }
+
+  .toolbar-group {
+    display: flex;
+    gap: 0.35rem;
+  }
+
+  .filter-btn {
+    font-family: var(--font-sans);
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    padding: 0.4rem 0.85rem;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-weight: 500;
+  }
+
+  .filter-btn:hover {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+  }
+
+  .filter-btn.active {
+    background: var(--border-highlight);
+    color: white;
+    border-color: var(--border-highlight);
+  }
+
+  .filter-btn.active-chromium { background: var(--accent-chromium); border-color: var(--accent-chromium); color: #000; }
+  .filter-btn.active-webkit { background: var(--accent-webkit); border-color: var(--accent-webkit); color: #fff; }
+  .filter-btn.active-firefox { background: var(--accent-firefox); border-color: var(--accent-firefox); color: #000; }
+  .filter-btn.active-inapp { background: var(--accent-inapp); border-color: var(--accent-inapp); color: #fff; }
+
+  .toolbar-separator {
+    width: 1px;
+    height: 24px;
+    background: var(--border);
+    margin: 0 0.5rem;
+  }
+
+  .view-toggle {
+    margin-left: auto;
+    display: flex;
+    gap: 0.35rem;
+  }
+
+  /* ====== CONTENT ====== */
+  .content {
+    padding: 2rem 3rem;
+  }
+
+  /* Grid View */
+  .grid-view {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.25rem;
+  }
+
+  /* Side-by-Side View */
+  .side-by-side-view {
+    display: flex;
+    gap: 1.25rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+  }
+
+  .side-by-side-view .card {
+    min-width: 320px;
+    max-width: 400px;
+    flex-shrink: 0;
+  }
+
+  /* Diff View */
+  .diff-view {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .diff-view .card {
+    position: relative;
+  }
+
+  /* ====== CARDS ====== */
+  .card {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+
+  .card:hover {
+    border-color: #30363d;
+    background: var(--bg-card-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+
+  .card-header {
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .card-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .card-subtitle {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    margin-top: 0.2rem;
+    font-family: var(--font-mono);
+  }
+
+  .card-tags {
+    display: flex;
+    gap: 0.35rem;
+    flex-shrink: 0;
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.15rem 0.55rem;
+    border-radius: 5px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .tag-chromium { background: rgba(76,175,80,0.12); color: var(--accent-chromium); border: 1px solid rgba(76,175,80,0.2); }
+  .tag-webkit { background: rgba(92,138,255,0.12); color: var(--accent-webkit); border: 1px solid rgba(92,138,255,0.2); }
+  .tag-firefox { background: rgba(255,152,0,0.12); color: var(--accent-firefox); border: 1px solid rgba(255,152,0,0.2); }
+  .tag-inapp { background: rgba(233,30,99,0.12); color: var(--accent-inapp); border: 1px solid rgba(233,30,99,0.2); }
+  .tag-ios { background: rgba(92,138,255,0.08); color: #79c0ff; border: 1px solid rgba(92,138,255,0.15); }
+  .tag-android { background: rgba(76,175,80,0.08); color: #7ee787; border: 1px solid rgba(76,175,80,0.15); }
+  .tag-desktop { background: rgba(171,130,255,0.08); color: #ab82ff; border: 1px solid rgba(171,130,255,0.15); }
+
+  .card-image-container {
+    position: relative;
+    overflow: hidden;
+    background: #000;
+    cursor: zoom-in;
+    max-height: 600px;
+    overflow-y: auto;
+  }
+
+  .card-image-container img {
+    width: 100%;
+    display: block;
+  }
+
+  .card-footer {
+    padding: 0.6rem 1rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .card-footer span {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+
+  /* ====== LIGHTBOX ====== */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.92);
+    backdrop-filter: blur(20px);
+    z-index: 100;
+    display: none;
+    place-items: center;
+    padding: 2rem;
+    cursor: zoom-out;
+  }
+
+  .lightbox.active {
+    display: grid;
+  }
+
+  .lightbox img {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 0 80px rgba(0,0,0,0.5);
+  }
+
+  .lightbox-label {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  /* ====== STATS BAR ====== */
+  .stats {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .stat-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+  }
+
+  .stat-number {
+    font-size: 1.4rem;
+    font-weight: 700;
+    font-family: var(--font-mono);
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  /* ====== RESPONSIVE ====== */
+  @media (max-width: 768px) {
+    .header, .toolbar, .content { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .grid-view { grid-template-columns: 1fr; }
+    .diff-view { grid-template-columns: 1fr; }
+  }
+
+  /* ====== EMPTY STATE ====== */
+  .empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-muted);
+  }
+  .empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="header-icon">🔍</div>
+    <h1>Browser Compatibility Report</h1>
+  </div>
+  <div class="header-meta">
+    <div class="header-meta-item">
+      URL: <code id="target-url">__URL__</code>
+    </div>
+    <div class="header-meta-item">
+      Captured: <code id="capture-date">__DATE__</code>
+    </div>
+    <div class="header-meta-item">
+      Screenshots: <code id="total-count">0</code>
+    </div>
+  </div>
+</div>
+
+<div class="toolbar">
+  <div class="toolbar-group" id="engine-filters">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="chromium">Chromium</button>
+    <button class="filter-btn" data-filter="webkit">WebKit</button>
+    <button class="filter-btn" data-filter="firefox">Firefox</button>
+    <button class="filter-btn" data-filter="in-app">In-App</button>
+  </div>
+  <div class="toolbar-separator"></div>
+  <div class="toolbar-group" id="platform-filters">
+    <button class="filter-btn active" data-platform="all">All Devices</button>
+    <button class="filter-btn" data-platform="ios">iOS</button>
+    <button class="filter-btn" data-platform="android">Android</button>
+    <button class="filter-btn" data-platform="desktop">Computer</button>
+  </div>
+  <div class="toolbar-separator"></div>
+  <div class="view-toggle">
+    <button class="filter-btn active" data-view="grid">Grid</button>
+    <button class="filter-btn" data-view="side-by-side">Side-by-Side</button>
+    <button class="filter-btn" data-view="diff">Compare 2</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="stats" id="stats"></div>
+  <div id="cards-container" class="grid-view"></div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <img id="lightbox-img" src="" alt="">
+  <div class="lightbox-label" id="lightbox-label"></div>
+</div>
+
+<script>
+// ============================================================
+// Data & State
+// ============================================================
+const metadata = __METADATA__;
+let currentFilter = 'all';
+let currentPlatform = 'all';
+let currentView = 'grid';
+let diffSelections = [];
+
+document.getElementById('total-count').textContent = metadata.results.length;
+
+// ============================================================
+// Render
+// ============================================================
+function getFilteredResults() {
+  return metadata.results.filter(r => {
+    const engineMatch = currentFilter === 'all'
+      || (currentFilter === 'in-app' && r.type === 'in-app')
+      || (r.browserEngine === currentFilter && r.type !== 'in-app');
+    const platformMatch = currentPlatform === 'all'
+      || r.platform === currentPlatform;
+    return engineMatch && platformMatch;
+  });
+}
+
+function renderStats() {
+  const results = metadata.results;
+  const engines = [...new Set(results.map(r => r.browserEngine))];
+  const devices = [...new Set(results.map(r => r.device))];
+  const inAppCount = results.filter(r => r.type === 'in-app').length;
+
+  document.getElementById('stats').innerHTML = `
+    <div class="stat-chip">
+      <span class="stat-number">${results.length}</span>
+      <span class="stat-label">Total<br>Screenshots</span>
+    </div>
+    <div class="stat-chip">
+      <span class="stat-number">${engines.length}</span>
+      <span class="stat-label">Browser<br>Engines</span>
+    </div>
+    <div class="stat-chip">
+      <span class="stat-number">${devices.length}</span>
+      <span class="stat-label">Device<br>Profiles</span>
+    </div>
+    <div class="stat-chip">
+      <span class="stat-number">${inAppCount}</span>
+      <span class="stat-label">In-App<br>Browsers</span>
+    </div>
+  `;
+}
+
+function createCard(result, index) {
+  const engineTag = result.type === 'in-app' ? 'inapp' : result.browserEngine;
+  const platformTag = result.platform;
+  const isDiffMode = currentView === 'diff';
+  const isSelected = diffSelections.includes(index);
+
+  return `
+    <div class="card ${isSelected ? 'diff-selected' : ''}"
+         data-index="${index}"
+         ${isDiffMode ? `onclick="toggleDiffSelect(${index})"` : ''}>
+      <div class="card-header">
+        <div>
+          <div class="card-title">${result.browser}</div>
+          <div class="card-subtitle">${result.device}</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag tag-${engineTag}">${result.browserEngine}</span>
+          <span class="tag tag-${platformTag}">${platformTag}</span>
+        </div>
+      </div>
+      <div class="card-image-container" ${!isDiffMode ? `onclick="openLightbox('screenshots/${result.filename}', '${result.browser} — ${result.device}')"` : ''}>
+        <img src="screenshots/${result.filename}" alt="${result.browser} ${result.device}" loading="lazy">
+      </div>
+      <div class="card-footer">
+        <span>${result.viewport.width} × ${result.viewport.height}</span>
+        <span>${result.type === 'in-app' ? '📲 In-App WebView' : '🌐 Native Browser'}</span>
+      </div>
+    </div>
+  `;
+}
+
+function render() {
+  const container = document.getElementById('cards-container');
+  const filtered = getFilteredResults();
+
+  container.className = currentView === 'side-by-side' ? 'side-by-side-view'
+    : currentView === 'diff' ? 'diff-view'
+    : 'grid-view';
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div class="empty" style="grid-column: 1/-1;">
+        <div class="empty-icon">🔍</div>
+        <p>No screenshots match your filters</p>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = filtered.map((r, i) => createCard(r, metadata.results.indexOf(r))).join('');
+}
+
+// ============================================================
+// Filters
+// ============================================================
+document.getElementById('engine-filters').addEventListener('click', e => {
+  if (!e.target.matches('.filter-btn')) return;
+  document.querySelectorAll('#engine-filters .filter-btn').forEach(b => b.classList.remove('active', 'active-chromium', 'active-webkit', 'active-firefox', 'active-inapp'));
+  const filter = e.target.dataset.filter;
+  currentFilter = filter;
+  e.target.classList.add('active');
+  if (filter !== 'all') e.target.classList.add('active-' + (filter === 'in-app' ? 'inapp' : filter));
+  render();
+});
+
+document.getElementById('platform-filters').addEventListener('click', e => {
+  if (!e.target.matches('.filter-btn')) return;
+  document.querySelectorAll('#platform-filters .filter-btn').forEach(b => b.classList.remove('active'));
+  currentPlatform = e.target.dataset.platform;
+  e.target.classList.add('active');
+  render();
+});
+
+document.querySelector('.view-toggle').addEventListener('click', e => {
+  if (!e.target.matches('.filter-btn')) return;
+  document.querySelectorAll('.view-toggle .filter-btn').forEach(b => b.classList.remove('active'));
+  currentView = e.target.dataset.view;
+  e.target.classList.add('active');
+  diffSelections = [];
+  render();
+});
+
+// ============================================================
+// Diff Mode
+// ============================================================
+function toggleDiffSelect(index) {
+  const pos = diffSelections.indexOf(index);
+  if (pos >= 0) {
+    diffSelections.splice(pos, 1);
+  } else if (diffSelections.length < 2) {
+    diffSelections.push(index);
+  }
+  render();
+}
+
+// ============================================================
+// Lightbox
+// ============================================================
+function openLightbox(src, label) {
+  const lb = document.getElementById('lightbox');
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox-label').textContent = label;
+  lb.classList.add('active');
+}
+
+document.getElementById('lightbox').addEventListener('click', () => {
+  document.getElementById('lightbox').classList.remove('active');
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.getElementById('lightbox').classList.remove('active');
+});
+
+// ============================================================
+// Init
+// ============================================================
+renderStats();
+render();
+</script>
+</body>
+</html>
