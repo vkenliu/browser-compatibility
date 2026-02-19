@@ -126,7 +126,7 @@ These are the real UA strings used to detect each in-app browser:
 ## Device Profiles Available in Playwright
 
 The starter uses these defaults, but Playwright has many more:
-- iPhone 15 Pro, iPhone 13, iPhone SE (3rd generation)
+- iPhone 15 Pro, iPhone 13, iPhone SE (3rd gen)
 - Pixel 7, Galaxy S9+
 - iPad Pro 11
 
