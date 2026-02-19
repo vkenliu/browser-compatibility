@@ -70,7 +70,7 @@ node capture.mjs https://example.com --width 390 --height 844
 
 - iPhone 15 Pro
 - iPhone 13
-- iPhone SE (3rd generation)
+- iPhone SE (3rd gen)
 - Pixel 7
 - Galaxy S9+
 - iPad Pro 11
